@@ -6,9 +6,19 @@ public class DFSO {
     public static void main(String[] args) throws InterruptedException {
         int size = 5;
         int[][] distances = new int[size][size];
+        int[] best_of_best = new int[size];
+        int best_cost = Integer.MAX_VALUE;
         remplir_mat(distances, size);
-
-        TSP_DFS(distances,300,0);
+        for (int i = 0; i < distances.length; i++) {
+            best_cost=TSP_DFS(distances, 300, i, best_of_best, best_cost);
+        }
+        System.out.println("\nle chmin le plus optimal est:");
+        for(int  i = 0; i < best_of_best.length; i++){
+            System.out.print(best_of_best[i]);
+            System.out.print("->");
+        }
+        System.out.print(best_of_best[0]);
+        System.out.println("et son cout est de"+best_cost);
     }
 
     static void remplir_mat(int[][] mat, int size) throws InterruptedException {
@@ -35,7 +45,8 @@ public class DFSO {
             System.out.println();
         }
     }
-    public static void TSP_DFS(int[][] mat,int dist, int start) {
+    public static int TSP_DFS(int[][] mat,int dist, int start, int[] best_of_best
+    , int best_best_cost) {
          Stack<Node> stack = new Stack<Node>();
          int [] sol= new int[mat.length];
          //initialiser sol 
@@ -116,9 +127,17 @@ public class DFSO {
         for(int i = 0; i< Bsol.length; i++){
             System.out.print(Bsol[i]);
             System.out.print("->");
+            
         }
         System.out.print(Bsol[0]);
         System.out.println("Le cout est de:"+best_cost);
+        if (best_cost<best_best_cost) {
+            for (int j = 0; j < best_of_best.length; j++) {
+                best_of_best[j] = Bsol[j];
+            }
+            best_best_cost = best_cost;
+        }
+        return best_best_cost;
     }
     static boolean allVisited(boolean[] visited) {
         for (int i = 0; i < visited.length; i++) {
